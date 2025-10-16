@@ -1,0 +1,40 @@
+import pandas as pd
+from pathlib import Path
+from typing import List
+from models import SupplierItem
+
+DATA_PATH = Path(__file__).resolve().parents[1] / "data" / "sample_suppliers.csv"
+
+def search_suppliers(query: str) -> List[SupplierItem]:
+    # Carga robusta del CSV
+    df = pd.read_csv(DATA_PATH)
+
+    # Asegura columnas como string y en minúsculas
+    for col in ("name", "spec_text"):
+        if col not in df.columns:
+            df[col] = ""  # evita KeyError si el CSV se toca
+        df[col] = df[col].astype(str)
+
+    q = (query or "").lower().strip()
+
+    # Filtro seguro (case-insensitive). Si no hay match, devuelve vacío sin romper.
+    mask = df["name"].str.lower().str.contains(q, na=False) | \
+           df["spec_text"].str.lower().str.contains(q, na=False)
+
+    hits = df[mask].copy()
+    items: List[SupplierItem] = []
+    for _, r in hits.iterrows():
+        items.append(SupplierItem(
+            sku=str(r.get("sku", "")),
+            vendor=str(r.get("vendor", "")),
+            name=str(r.get("name", "")),
+            spec_text=str(r.get("spec_text", "")),
+            unit=str(r.get("unit", "pcs")),
+            pack_size=float(r.get("pack_size", 1.0)),
+            price=float(r.get("price", 0.0)),
+            currency=str(r.get("currency", "EUR")),
+            stock=int(r.get("stock", 0)),
+            eta_days=int(r.get("eta_days", 14)),
+        ))
+    return items
+

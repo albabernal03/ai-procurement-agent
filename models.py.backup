@@ -1,0 +1,38 @@
+from typing import List, Optional, Dict
+from pydantic import BaseModel, Field
+
+class UserProfile(BaseModel):
+    query: str = Field(..., description="Free-text description, e.g., 'DNA polymerase for PCR'")
+    budget: float = Field(..., description="Max total budget in EUR")
+    preferred_vendors: List[str] = Field(default_factory=list)
+    deadline_days: int = 14
+    weights: Dict[str, float] = Field(default_factory=lambda: {"alpha_cost": 0.4, "beta_evidence": 0.4, "gamma_availability": 0.2})
+    currency: str = "EUR"
+
+class SupplierItem(BaseModel):
+    sku: str
+    vendor: str
+    name: str
+    spec_text: str
+    unit: str
+    pack_size: float
+    price: float
+    currency: str = "EUR"
+    stock: int
+    eta_days: int
+
+class Candidate(BaseModel):
+    item: SupplierItem
+    normalized: Dict[str, float] = Field(default_factory=dict)
+    evidence_score: float = 0.0
+    cost_fitness: float = 0.0
+    availability_score: float = 0.0
+    total_score: float = 0.0
+    rationales: List[str] = Field(default_factory=list)
+    flags: List[str] = Field(default_factory=list)
+
+class Quote(BaseModel):
+    user: UserProfile
+    candidates: List[Candidate]
+    selected: Optional[Candidate] = None
+    notes: Optional[str] = None

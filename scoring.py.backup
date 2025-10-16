@@ -1,0 +1,26 @@
+from typing import List
+from models import Candidate, UserProfile
+
+def compute_scores(cands: List[Candidate], user: UserProfile) -> List[Candidate]:
+    # 1) cost fitness: lower price relative to median → closer to 1
+    prices = [c.item.price for c in cands] or [1.0]
+    median = sorted(prices)[len(prices)//2]
+    for c in cands:
+        c.cost_fitness = max(0.0, min(1.0, (median / max(1e-6, c.item.price)) ))
+        # 2) availability: in stock & ETA bonus
+        if c.item.stock <= 0:
+            avail = 0.0
+        else:
+            # 1.0 if ETA ≤ user.deadline_days, else decays
+            avail = 1.0 if c.item.eta_days <= user.deadline_days else max(0.0, 1.0 - (c.item.eta_days - user.deadline_days) * 0.05)
+        c.availability_score = round(avail, 3)
+
+        w = user.weights
+        c.total_score = round(
+            w.get("alpha_cost", 0.4) * c.cost_fitness +
+            w.get("beta_evidence", 0.4) * c.evidence_score +
+            w.get("gamma_availability", 0.2) * c.availability_score, 4
+        )
+    # rank descending
+    cands.sort(key=lambda x: x.total_score, reverse=True)
+    return cands

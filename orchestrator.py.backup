@@ -1,0 +1,34 @@
+from typing import List
+from models import UserProfile, Candidate, Quote
+from connectors.suppliers import search_suppliers
+from normalizer import normalize_items
+from evidence import attach_evidence_scores
+from rules import apply_rules
+from scoring import compute_scores
+from quotation import save_html_report
+from pathlib import Path
+
+def generate_quote(user: UserProfile) -> Quote:
+    try:
+        items = search_suppliers(user.query)
+    except Exception as e:
+        # Devuelve un Quote vacío pero con nota de error “controlado”
+        quote = Quote(user=user, candidates=[], selected=None, notes=f"Supplier connector error: {e}")
+        save_html_report(quote, Path("./outputs"))
+        return quote
+
+    # Si no hay items, devuelve quote vacío sin romper
+    if not items:
+        quote = Quote(user=user, candidates=[], selected=None, notes="No supplier matches for the query")
+        save_html_report(quote, Path("./outputs"))
+        return quote
+
+    cands: List[Candidate] = normalize_items(items)
+    cands = attach_evidence_scores(cands)
+    cands = apply_rules(cands, user)
+    cands = compute_scores(cands, user)
+    selected = cands[0] if cands else None
+    quote = Quote(user=user, candidates=cands, selected=selected, notes="MVP agent quotation")
+    save_html_report(quote, Path("./outputs"))
+    return quote
+

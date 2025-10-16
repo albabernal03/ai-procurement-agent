@@ -1,0 +1,74 @@
+[
+  {
+    "timestamp": "2025-10-16T20:41:42.173358",
+    "query": "DNA polymerase",
+    "budget": 200.0,
+    "our_recommendation_sku": "REST-ECO-100",
+    "user_selected_sku": "SERP-13270169425829927291",
+    "agreed": false,
+    "user_rating": 4,
+    "user_comment": null,
+    "selected_product": {
+      "vendor": "Thermo Fisher Scientific",
+      "name": "Invitrogen Taq DNA Polymerase",
+      "price": 71.65,
+      "cost_fitness": 0.7459219858156028,
+      "evidence_score": 0.0,
+      "availability_score": 1.0,
+      "total_score": 0.4611
+    },
+    "weights_used": {
+      "alpha_cost": 0.35,
+      "beta_evidence": 0.45,
+      "gamma_availability": 0.2
+    }
+  },
+  {
+    "timestamp": "2025-10-16T20:42:45.641483",
+    "query": "PCR membrane",
+    "budget": 200.0,
+    "our_recommendation_sku": "TAQ-001",
+    "user_selected_sku": "SERP-15005266151699815782",
+    "agreed": false,
+    "user_rating": 5,
+    "user_comment": null,
+    "selected_product": {
+      "vendor": "StonyLab",
+      "name": "Stonylab 50 Pack Nylon Membrane Filters, Hydrophilic Nylon Membrane Disc Filters",
+      "price": 18.79,
+      "cost_fitness": 0.8903093987157035,
+      "evidence_score": 0.0,
+      "availability_score": 1.0,
+      "total_score": 0.5116
+    },
+    "weights_used": {
+      "alpha_cost": 0.35,
+      "beta_evidence": 0.45,
+      "gamma_availability": 0.2
+    }
+  },
+  {
+    "timestamp": "2025-10-16T20:43:31.961075",
+    "query": "polymerase",
+    "budget": 200.0,
+    "our_recommendation_sku": "REST-ECO-100",
+    "user_selected_sku": "SERP-15015517136325645054",
+    "agreed": false,
+    "user_rating": 3,
+    "user_comment": null,
+    "selected_product": {
+      "vendor": "New England Biolabs",
+      "name": "SP6 RNA Polymerase",
+      "price": 81.0,
+      "cost_fitness": 0.6048780487804878,
+      "evidence_score": 0.0,
+      "availability_score": 1.0,
+      "total_score": 0.4117
+    },
+    "weights_used": {
+      "alpha_cost": 0.35,
+      "beta_evidence": 0.45,
+      "gamma_availability": 0.2
+    }
+  }
+]

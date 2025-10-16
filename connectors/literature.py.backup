@@ -1,0 +1,31 @@
+# Fake literature evidence scoring (to be replaced by a real service)
+# Heuristic: map product keywords to (citations, q1_ratio) and compute score in [0,1]
+from typing import Dict
+import math
+
+_FAKE_CITATIONS: Dict[str, int] = {
+    "pcr": 1200,
+    "dna polymerase": 850,
+    "rt-qpcr master mix": 620,
+    "western blot membrane": 410,
+    "elisa kit": 980,
+}
+
+_FAKE_Q1_RATIO: Dict[str, float] = {
+    "pcr": 0.72,
+    "dna polymerase": 0.68,
+    "rt-qpcr master mix": 0.61,
+    "western blot membrane": 0.47,
+    "elisa kit": 0.58,
+}
+
+def evidence_score_from_text(text: str) -> float:
+    t = text.lower()
+    best = 0.0
+    for k, c in _FAKE_CITATIONS.items():
+        if k in t:
+            # score by log-citations scaled + q1 bonus, capped at 1.0
+            q1 = _FAKE_Q1_RATIO.get(k, 0.5)
+            score = min(1.0, (math.log10(max(10, c)) - 1) / 2 + 0.3 * q1)
+            best = max(best, score)
+    return round(best, 3)

@@ -1,0 +1,363 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>AI Procurement Agent — Quotation</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; }
+    h1 { margin-bottom: 0; }
+    .muted { color: #666; }
+    table { border-collapse: collapse; width: 100%; margin-top: 12px; }
+    th, td { border: 1px solid #ccc; padding: 8px; font-size: 14px; vertical-align: top; }
+    th { background: #f5f5f5; text-align: left; }
+    .tag { display: inline-block; padding: 2px 6px; border-radius: 6px; background: #eef; margin-right: 4px; }
+    .score { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>AI Procurement Agent — Quotation</h1>
+  <p class="muted">Query: <b>polymerase</b> · Budget: 200.0 EUR · Deadline: 7 days</p>
+
+  <h2>Top Recommendation</h2>
+  
+  <p><b>New England Biolabs</b> — EcoRI Restriction Enzyme (REST-ECO-100)</p>
+  <ul>
+    <li>Price: 78.0 EUR</li>
+    <li>Availability: stock 15, ETA 3 days</li>
+    <li>Scores → Cost: 0.6195121951219512, Evidence: 0.735, Availability: 1.0, <span class="score">Total: 0.7476</span></li>
+  </ul>
+  
+
+  <h2>All Candidates (ranked)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Vendor / SKU</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock / ETA</th>
+        <th>Scores</th>
+        <th>Flags</th>
+        <th>Rationales</th>
+      </tr>
+    </thead>
+   <tbody>
+  
+  <tr>
+    <td>1</td>
+
+        <td><b>New England Biolabs</b><br/>REST-ECO-100</td>
+        <td>EcoRI Restriction Enzyme<br/><span class="muted">20,000 units/mL, high concentration</span></td>
+        <td>78.0 EUR</td>
+        <td>15 / 3d</td>
+        <td>Cost 0.6195121951219512 · Ev 0.735 · Av 1.0 <br/><span class="score">Total 0.7476</span></td>
+        <td></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€78.00/€200.00) → cost_fitness=0.61<br/>• R3: Evidence score 0.73 meets threshold 0.20 → approved<br/>• R4: In stock (15 units), ETA 3d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.62) + (0.45×0.73) + (0.20×1.00) = 0.748 → Total: 0.7476<br/>• 🤖 AI Analysis: The EcoRI Restriction Enzyme from New England Biolabs is ranked #1 due to its exceptional availability and strong scientific evidence supporting its effectiveness, with a score of 1.00 and 0.73, respectively. While its cost fitness score of 0.62 indicates a relatively higher price, the product's overall value and ranking suggest that its benefits outweigh the cost, which is still within your budget of €200. As the top-ranked option, this enzyme offers a reliable choice, despite being a moderate investment of €78.0.<br/></td>
+      </tr>
+      
+  <tr>
+    <td>2</td>
+
+        <td><b>Promega</b><br/>LIG-T4-50</td>
+        <td>T4 DNA Ligase<br/><span class="muted">High concentration, 3 U/µL, for cloning</span></td>
+        <td>92.0 EUR</td>
+        <td>20 / 4d</td>
+        <td>Cost 0.551219512195122 · Ev 0.735 · Av 1.0 <br/><span class="score">Total 0.7237</span></td>
+        <td></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€92.00/€200.00) → cost_fitness=0.54<br/>• R3: Evidence score 0.73 meets threshold 0.20 → approved<br/>• R4: In stock (20 units), ETA 4d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.55) + (0.45×0.73) + (0.20×1.00) = 0.724 → Total: 0.7237<br/>• 🤖 AI Analysis: The Promega T4 DNA Ligase is ranked #2 due to its high availability and moderate scientific evidence score, despite being a relatively expensive option with a cost fitness score of 0.55. This suggests a trade-off between cost and performance, as the product's price of €92.0 is near half of the user's budget of €200.0, but its scientific evidence score of 0.73 indicates a strong reputation and reliability, justifying its consideration as a viable option.<br/></td>
+      </tr>
+      
+  <tr>
+    <td>3</td>
+
+        <td><b>ThermoFisher Scientific</b><br/>TAQ-001</td>
+        <td>Taq DNA Polymerase<br/><span class="muted">High fidelity, 5 U/µL, for PCR amplification</span></td>
+        <td>89.5 EUR</td>
+        <td>25 / 3d</td>
+        <td>Cost 0.5634146341463415 · Ev 0.63 · Av 1.0 <br/><span class="score">Total 0.6807</span></td>
+        <td></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€89.50/€200.00) → cost_fitness=0.55<br/>• R3: Evidence score 0.63 meets threshold 0.20 → approved<br/>• R4: In stock (25 units), ETA 3d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.56) + (0.45×0.63) + (0.20×1.00) = 0.681 → Total: 0.6807<br/>• 🤖 AI Analysis: The Taq DNA Polymerase from ThermoFisher Scientific is ranked #3 due to its moderate cost fitness score of 0.56, indicating a relatively high price of €89.5, which may be a trade-off for its strong availability and decent scientific evidence score of 0.63. Although it is within the user's budget of €200.0, its total score of 0.6807 suggests that other options may offer better overall value. The high availability score of 1.00 is a notable advantage, but the cost and scientific evidence scores prevent it from ranking higher.<br/></td>
+      </tr>
+      
+  <tr>
+    <td>4</td>
+
+        <td><b>Biofargo</b><br/>SERP-5504946927240163688</td>
+        <td>Taq DNA Polymerase - High Efficiency and Stability PCR Enzyme 200 U<br/><span class="muted">See product details</span></td>
+        <td>4.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.9804878048780488 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.5432</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€4.00/€200.00) → cost_fitness=0.98<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.98) + (0.45×0.00) + (0.20×1.00) = 0.543 → Total: 0.5432<br/></td>
+      </tr>
+      
+  <tr>
+    <td>5</td>
+
+        <td><b>Qiagen</b><br/>RNA-KIT-001</td>
+        <td>RNeasy Mini Kit<br/><span class="muted">RNA extraction, 50 preps, includes columns and buffers</span></td>
+        <td>220.0 EUR</td>
+        <td>12 / 4d</td>
+        <td>Cost 0.0 · Ev 0.735 · Av 1.0 <br/><span class="score">Total 0.5308</span></td>
+        <td><span class="tag">over_budget</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Price €220.00 exceeds budget €200.00 by €20.00 → substitute recommended<br/>• R3: Evidence score 0.73 meets threshold 0.20 → approved<br/>• R4: In stock (12 units), ETA 4d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.00) + (0.45×0.73) + (0.20×1.00) = 0.531 → Total: 0.5308<br/></td>
+      </tr>
+      
+  <tr>
+    <td>6</td>
+
+        <td><b>Biofargo</b><br/>SERP-15456694226308714682</td>
+        <td>Pfu DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>13.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.9365853658536585 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.5278</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€13.00/€200.00) → cost_fitness=0.94<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.94) + (0.45×0.00) + (0.20×1.00) = 0.528 → Total: 0.5278<br/></td>
+      </tr>
+      
+  <tr>
+    <td>7</td>
+
+        <td><b>Promega</b><br/>POL-300</td>
+        <td>GoTaq DNA Polymerase<br/><span class="muted">Standard Taq for routine PCR, 5 U/µL</span></td>
+        <td>65.0 EUR</td>
+        <td>40 / 5d</td>
+        <td>Cost 0.6829268292682926 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.439</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€65.00/€200.00) → cost_fitness=0.68<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (40 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.68) + (0.45×0.00) + (0.20×1.00) = 0.439 → Total: 0.4390<br/></td>
+      </tr>
+      
+  <tr>
+    <td>8</td>
+
+        <td><b>G-Biosciences</b><br/>SERP-11151847129502135986</td>
+        <td>Taq DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>96.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.5317073170731708 · Ev 0.10500000000000001 · Av 1.0 <br/><span class="score">Total 0.4333</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€96.00/€200.00) → cost_fitness=0.52<br/>• R3: Evidence score 0.11 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.53) + (0.45×0.11) + (0.20×1.00) = 0.433 → Total: 0.4333<br/></td>
+      </tr>
+      
+  <tr>
+    <td>9</td>
+
+        <td><b>Thermo Fisher Scientific</b><br/>SERP-13270169425829927291</td>
+        <td>Invitrogen Taq DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>71.65 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.6504878048780487 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.4277</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€71.65/€200.00) → cost_fitness=0.64<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.65) + (0.45×0.00) + (0.20×1.00) = 0.428 → Total: 0.4277<br/></td>
+      </tr>
+      
+  <tr>
+    <td>10</td>
+
+        <td><b>Thermo Fisher Scientific</b><br/>SERP-6603533114667053167</td>
+        <td>Thermo Scientific DreamTaq DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>73.65 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.6407317073170731 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.4243</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€73.65/€200.00) → cost_fitness=0.63<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.64) + (0.45×0.00) + (0.20×1.00) = 0.424 → Total: 0.4243<br/></td>
+      </tr>
+      
+  <tr>
+    <td>11</td>
+
+        <td><b>New England Biolabs</b><br/>SERP-14688810561515177512</td>
+        <td>T7 RNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>75.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.6341463414634146 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.422</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€75.00/€200.00) → cost_fitness=0.62<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.63) + (0.45×0.00) + (0.20×1.00) = 0.422 → Total: 0.4220<br/></td>
+      </tr>
+      
+  <tr>
+    <td>12</td>
+
+        <td><b>Sigma-Aldrich</b><br/>SERP-17118961536471485297</td>
+        <td>Sigma-Aldrich Nova Taq DNA Polymerase Ultrapure recombinant enzyme for dependable PCR amplification<br/><span class="muted">See product details</span></td>
+        <td>80.5 EUR</td>
+        <td>20 / 2d</td>
+        <td>Cost 0.6073170731707317 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.4126</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€80.50/€200.00) → cost_fitness=0.60<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 2d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.61) + (0.45×0.00) + (0.20×1.00) = 0.413 → Total: 0.4126<br/></td>
+      </tr>
+      
+  <tr>
+    <td>13</td>
+
+        <td><b>New England Biolabs</b><br/>SERP-15015517136325645054</td>
+        <td>SP6 RNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>81.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.6048780487804878 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.4117</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€81.00/€200.00) → cost_fitness=0.59<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.60) + (0.45×0.00) + (0.20×1.00) = 0.412 → Total: 0.4117<br/></td>
+      </tr>
+      
+  <tr>
+    <td>14</td>
+
+        <td><b>Zymo Research</b><br/>SERP-1034558921049016579</td>
+        <td>ZymoTaq DNA Polymerase 50 Rxns<br/><span class="muted">See product details</span></td>
+        <td>85.2 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.584390243902439 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.4045</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€85.20/€200.00) → cost_fitness=0.57<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.58) + (0.45×0.00) + (0.20×1.00) = 0.405 → Total: 0.4045<br/></td>
+      </tr>
+      
+  <tr>
+    <td>15</td>
+
+        <td><b>G-Biosciences</b><br/>SERP-15247413465066661747</td>
+        <td>Taq PLUS DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>109.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.47018348623853207 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.3646</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€109.00/€200.00) → cost_fitness=0.45<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.47) + (0.45×0.00) + (0.20×1.00) = 0.365 → Total: 0.3646<br/></td>
+      </tr>
+      
+  <tr>
+    <td>16</td>
+
+        <td><b>Thermo Fisher Scientific</b><br/>SERP-6463456727791244321</td>
+        <td>Thermo Scientific T7 RNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>109.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.47018348623853207 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.3646</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€109.00/€200.00) → cost_fitness=0.45<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.47) + (0.45×0.00) + (0.20×1.00) = 0.365 → Total: 0.3646<br/></td>
+      </tr>
+      
+  <tr>
+    <td>17</td>
+
+        <td><b>Intact Genomics</b><br/>SERP-4415442362729491643</td>
+        <td>Taq DNA Polymerase - 1000 Units<br/><span class="muted">See product details</span></td>
+        <td>115.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.44565217391304346 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.356</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€115.00/€200.00) → cost_fitness=0.43<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.45) + (0.45×0.00) + (0.20×1.00) = 0.356 → Total: 0.3560<br/></td>
+      </tr>
+      
+  <tr>
+    <td>18</td>
+
+        <td><b>Bio-Rad</b><br/>RT-PCR-200</td>
+        <td>iScript Reverse Transcription Kit<br/><span class="muted">cDNA synthesis, for RT-PCR, 100 reactions</span></td>
+        <td>180.0 EUR</td>
+        <td>8 / 6d</td>
+        <td>Cost 0.2847222222222222 · Ev 0.10500000000000001 · Av 1.0 <br/><span class="score">Total 0.3469</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€180.00/€200.00) → cost_fitness=0.10<br/>• R3: Evidence score 0.11 below threshold 0.20 → penalized<br/>• R4: In stock (8 units), ETA 6d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.28) + (0.45×0.11) + (0.20×1.00) = 0.347 → Total: 0.3469<br/></td>
+      </tr>
+      
+  <tr>
+    <td>19</td>
+
+        <td><b>ThermoFisher Scientific</b><br/>PCR-MIX-100</td>
+        <td>PCR Master Mix 2X<br/><span class="muted">Ready-to-use mix with buffer, dNTPs, MgCl2, Taq</span></td>
+        <td>125.0 EUR</td>
+        <td>30 / 2d</td>
+        <td>Cost 0.41000000000000003 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.3435</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€125.00/€200.00) → cost_fitness=0.38<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (30 units), ETA 2d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.41) + (0.45×0.00) + (0.20×1.00) = 0.344 → Total: 0.3435<br/></td>
+      </tr>
+      
+  <tr>
+    <td>20</td>
+
+        <td><b>New England Biolabs</b><br/>DNAP-500</td>
+        <td>Q5 High-Fidelity DNA Polymerase<br/><span class="muted">Ultra-high fidelity, hot-start, 2x master mix</span></td>
+        <td>145.0 EUR</td>
+        <td>18 / 2d</td>
+        <td>Cost 0.353448275862069 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.3237</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€145.00/€200.00) → cost_fitness=0.28<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (18 units), ETA 2d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.35) + (0.45×0.00) + (0.20×1.00) = 0.324 → Total: 0.3237<br/></td>
+      </tr>
+      
+  <tr>
+    <td>21</td>
+
+        <td><b>Thermo Fisher Scientific</b><br/>SERP-16884067539240606550</td>
+        <td>Invitrogen Platinum Taq DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>177.65 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.2884886011820996 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.301</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€177.65/€200.00) → cost_fitness=0.11<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.29) + (0.45×0.00) + (0.20×1.00) = 0.301 → Total: 0.3010<br/></td>
+      </tr>
+      
+  <tr>
+    <td>22</td>
+
+        <td><b>Thermo Fisher Scientific</b><br/>SERP-10024866172612619833</td>
+        <td>Thermo Scientific SP6 RNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>179.65 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.28527692735875315 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.2998</span></td>
+        <td><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Within budget (€179.65/€200.00) → cost_fitness=0.10<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.29) + (0.45×0.00) + (0.20×1.00) = 0.300 → Total: 0.2998<br/></td>
+      </tr>
+      
+  <tr>
+    <td>23</td>
+
+        <td><b>Takara Bio USA</b><br/>SERP-13434455300067224492</td>
+        <td>TaKaRa Ex Taq DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>228.0 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.0 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.2</span></td>
+        <td><span class="tag">over_budget</span><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Price €228.00 exceeds budget €200.00 by €28.00 → substitute recommended<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.00) + (0.45×0.00) + (0.20×1.00) = 0.200 → Total: 0.2000<br/></td>
+      </tr>
+      
+  <tr>
+    <td>24</td>
+
+        <td><b>Thermo Fisher Scientific</b><br/>SERP-653840226304479481</td>
+        <td>Invitrogen Platinum Taq DNA Polymerase, High Fidelity, 100 rxns<br/><span class="muted">See product details</span></td>
+        <td>220.5 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.0 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.2</span></td>
+        <td><span class="tag">over_budget</span><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Price €220.50 exceeds budget €200.00 by €20.50 → substitute recommended<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.00) + (0.45×0.00) + (0.20×1.00) = 0.200 → Total: 0.2000<br/></td>
+      </tr>
+      
+  <tr>
+    <td>25</td>
+
+        <td><b>Fisher Scientific</b><br/>SERP-7129225684183160966</td>
+        <td>Thermo Scientific RNA Polymerases<br/><span class="muted">See product details</span></td>
+        <td>392.5 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.0 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.2</span></td>
+        <td><span class="tag">over_budget</span><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Price €392.50 exceeds budget €200.00 by €192.50 → substitute recommended<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.00) + (0.45×0.00) + (0.20×1.00) = 0.200 → Total: 0.2000<br/></td>
+      </tr>
+      
+  <tr>
+    <td>26</td>
+
+        <td><b>Fisher Scientific</b><br/>SERP-12295157889644140367</td>
+        <td>Thermo Scientific Taq DNA Polymerase<br/><span class="muted">See product details</span></td>
+        <td>232.5 EUR</td>
+        <td>20 / 5d</td>
+        <td>Cost 0.0 · Ev 0.0 · Av 1.0 <br/><span class="score">Total 0.2</span></td>
+        <td><span class="tag">over_budget</span><span class="tag">low_evidence</span></td>
+        <td>• R1: Spec OK → normalized<br/>• R2: Price €232.50 exceeds budget €200.00 by €32.50 → substitute recommended<br/>• R3: Evidence score 0.00 below threshold 0.20 → penalized<br/>• R4: In stock (20 units), ETA 5d → availability_score=1.00<br/>• R5: Policy updates pending (feedback loop TBD)<br/>• SCORING: (0.35×0.00) + (0.45×0.00) + (0.20×1.00) = 0.200 → Total: 0.2000<br/></td>
+      </tr>
+      
+    </tbody>
+  </table>
+</body>
+</html>

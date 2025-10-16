@@ -1,0 +1,6 @@
+sku,vendor,name,spec_text,unit,pack_size,price,currency,stock,eta_days
+PCR-001,BioSupplier A,Taq DNA Polymerase,High fidelity enzyme for PCR,µL,5000.0,89.0,EUR,25,3
+PCR-002,LabVendor X,RT-qPCR Master Mix,2X mix with ROX reference dye,mL,1.0,119.0,EUR,0,21
+WB-101,BioSupplier A,PVDF Membrane,"0.45 µm, Western Blot membrane",pcs,1.0,39.0,EUR,40,5
+ELISA-77,AssayCo,ELISA Kit (Human IL-6),"96-well format, sensitivity 2 pg/mL",kit,1.0,320.0,EUR,7,10
+DNA-900,LabVendor X,DNA Polymerase Hot-Start,Optimized for multiplex PCR,µL,10000.0,149.0,EUR,12,4

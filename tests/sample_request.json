@@ -1,0 +1,14 @@
+{
+  "query": "DNA polymerase for PCR",
+  "budget": 200.0,
+  "preferred_vendors": [
+    "BioSupplier A"
+  ],
+  "deadline_days": 7,
+  "weights": {
+    "alpha_cost": 0.35,
+    "beta_evidence": 0.45,
+    "gamma_availability": 0.2
+  },
+  "currency": "EUR"
+}

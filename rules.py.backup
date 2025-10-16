@@ -1,0 +1,41 @@
+from typing import List
+from models import Candidate, UserProfile
+
+def apply_rules(cands: List[Candidate], user: UserProfile) -> List[Candidate]:
+    filtered: List[Candidate] = []
+    for c in cands:
+        # R1: spec_text present?
+        if not c.item.spec_text or len(c.item.spec_text.strip()) == 0:
+            c.flags.append("spec_missing")
+            c.rationales.append("R1: Missing spec → flagged for clarification")
+            # keep but penalize later
+        else:
+            c.rationales.append("R1: Spec OK → normalized")
+
+        # R2: within budget?
+        if c.item.price > user.budget:
+            c.flags.append("over_budget")
+            c.rationales.append(f"R2: Price {c.item.price:.2f} exceeds budget {user.budget:.2f} → consider substitute")
+            # we keep it in list to show alternatives but will down-rank by cost fitness
+        else:
+            c.rationales.append("R2: Within budget")
+
+        # R3: evidence threshold (simple: require >= 0.2)
+        if c.evidence_score < 0.2:
+            c.flags.append("low_evidence")
+            c.rationales.append("R3: Evidence below threshold → penalized")
+        else:
+            c.rationales.append("R3: Evidence acceptable")
+
+        # R4: stock status
+        if c.item.stock <= 0:
+            c.flags.append("out_of_stock")
+            c.rationales.append("R4: Out of stock → substitute suggested")
+        else:
+            c.rationales.append("R4: In stock")
+
+        # (R5 handled by learning in future; here we just note)
+        c.rationales.append("R5: Policy updates TBD (feedback loop)")
+
+        filtered.append(c)
+    return filtered
