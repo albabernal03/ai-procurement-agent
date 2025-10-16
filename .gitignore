@@ -1,0 +1,22 @@
+@'
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Caches/outputs propios
+cache/
+outputs/
+data/feedback.json
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+'@ | Out-File -Encoding utf8 .gitignore
+
+git rm -r --cached .env 2>$null
+git add .gitignore
+git commit -m "chore: stop tracking .env and ignore secrets"
