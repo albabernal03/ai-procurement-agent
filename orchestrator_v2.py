@@ -136,7 +136,8 @@ class FormalOrchestrator:
             metadata['inference_results'] = inference_results
             
             # === BUILD QUOTATION ===
-            from orchestrator import generate_quote
+            # ✅ USAR el orchestrator original completo que maneja todo correctamente
+            from orchestrator import ProcurementOrchestrator
             
             # Crear UserProfile para compatibilidad
             user_profile = UserProfile(
@@ -151,8 +152,9 @@ class FormalOrchestrator:
                 }
             )
             
-            # Generar quotation usando el orchestrator original
-            quotation = generate_quote(user_profile)
+            # Generar quotation usando el orchestrator original que incluye explicaciones LLM
+            orchestrator_legacy = ProcurementOrchestrator()
+            quotation = orchestrator_legacy.generate_quote(user_profile)
             
             # === VERIFY GOAL STATE ===
             goal_achieved = self.env.reward_function.check_goal_state(
@@ -238,8 +240,8 @@ class FormalOrchestrator:
             'candidates': products,
             'total_cost': sum(p.price for p in products) if products else 0,
             'evidence_score': 0.0,
-            'cost_fitness': 0.0,  # ✅ AÑADIDO
-            'completeness': 0.25  # 25% del pipeline
+            'cost_fitness': 0.0,
+            'completeness': 0.25
         }
         
         obs, reward, done, info = self.env.step(ActionType.QUERY_VENDORS, result)
@@ -261,7 +263,6 @@ class FormalOrchestrator:
         logger.info("▶ A2: NORMALIZE AND STRUCTURE INFORMATION")
         
         # Normalizar usando función existente
-        # normalize_items devuelve List[Candidate]
         normalized = normalize_items(products)
         
         logger.info(f"  - Normalized: {len(normalized)} candidates")
@@ -278,8 +279,8 @@ class FormalOrchestrator:
         result = {
             'candidates': normalized,
             'total_cost': sum(c.item.price for c in normalized) if normalized else 0,
-            'cost_fitness': 0.0,  # ✅ AÑADIDO
-            'evidence_score': 0.0,  # ✅ AÑADIDO
+            'cost_fitness': 0.0,
+            'evidence_score': 0.0,
             'completeness': 0.50
         }
         
@@ -325,18 +326,17 @@ class FormalOrchestrator:
         scored_candidates = self.scorer.compute_scores(candidates, user_profile)
         
         avg_evidence = sum(c.evidence_score for c in scored_candidates) / len(scored_candidates) if scored_candidates else 0
-        # ✅ AÑADIDO: Calcular cost fitness promedio
         avg_cost = sum(c.cost_fitness for c in scored_candidates) / len(scored_candidates) if scored_candidates else 0
         
         logger.info(f"  - Avg evidence score: {avg_evidence:.3f}")
-        logger.info(f"  - Avg cost fitness: {avg_cost:.3f}")  # ✅ NUEVO LOG
+        logger.info(f"  - Avg cost fitness: {avg_cost:.3f}")
         logger.info(f"  - Top candidate score: {scored_candidates[0].total_score:.3f}" if scored_candidates else "")
         
         # Step environment
         result = {
             'candidates': scored_candidates,
             'evidence_score': avg_evidence,
-            'cost_fitness': avg_cost,  # ✅ AÑADIDO
+            'cost_fitness': avg_cost,
             'total_cost': scored_candidates[0].item.price if scored_candidates else float('inf'),
             'eta_days': scored_candidates[0].item.eta_days if scored_candidates else 999,
             'vendor': scored_candidates[0].item.vendor if scored_candidates else '',
@@ -357,7 +357,7 @@ class FormalOrchestrator:
         """
         A4: Generate and Explain Recommendation
         - Select top-k candidates
-        - Generate LLM explanations
+        - Generate LLM explanations (manejado por orchestrator original)
         - Propose alternatives if needed
         """
         logger.info("▶ A4: GENERATE AND EXPLAIN RECOMMENDATION")
@@ -378,7 +378,7 @@ class FormalOrchestrator:
             Fact('vendor_confirmed', True, source='A4')
         )
         
-        # ✅ AÑADIDO: Calcular promedios
+        # Calcular promedios
         avg_cost = sum(c.cost_fitness for c in recommended) / len(recommended) if recommended else 0
         avg_evidence = sum(c.evidence_score for c in recommended) / len(recommended) if recommended else 0
         
@@ -386,11 +386,11 @@ class FormalOrchestrator:
         result = {
             'candidates': recommended,
             'total_cost': recommended[0].item.price if recommended else float('inf'),
-            'evidence_score': avg_evidence,  # ✅ USAR PROMEDIO
-            'cost_fitness': avg_cost,  # ✅ AÑADIDO
+            'evidence_score': avg_evidence,
+            'cost_fitness': avg_cost,
             'eta_days': recommended[0].item.eta_days if recommended else 999,
             'vendor': recommended[0].item.vendor if recommended else '',
-            'completeness': 1.0  # Pipeline completo
+            'completeness': 1.0
         }
         
         obs, reward, done, info = self.env.step(ActionType.BUILD_QUOTATION, result)
@@ -411,9 +411,6 @@ class FormalOrchestrator:
         Ejecutado después de que el usuario responde
         """
         logger.info("▶ A5: LEARN AND REFINE THROUGH FEEDBACK")
-        
-        # Registrar feedback en el sistema existente
-        # (usar la función del feedback_system)
         
         # Añadir fact
         self.inference_engine.kb.add_fact(
