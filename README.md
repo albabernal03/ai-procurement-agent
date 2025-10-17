@@ -473,7 +473,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - GitHub: [@albabernal03](https://github.com/albabernal03)
 - University: Kristianstad University, Sweden
 - Course: DA601A - Artificial Intelligence
-- Academic Year: 2024-2025
+- Academic Year: 2025-2026
 
 ---
 
@@ -491,7 +491,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Issues**: [GitHub Issues](https://github.com/albabernal03/ai-procurement-agent/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/albabernal03/ai-procurement-agent/discussions)
-- **Email**: alba.bernal@hkr.se
+- **Email**: alba.bernal0128@stud.hkr.se
 
 ---
 
