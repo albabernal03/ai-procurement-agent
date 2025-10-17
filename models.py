@@ -29,6 +29,11 @@ class UserProfile(BaseModel):
         if v <= 0:
             raise ValueError("Budget must be positive")
         return v
+    
+    @property
+    def urgency_days(self):
+        """Alias para compatibilidad con UserRequest"""
+        return self.deadline_days
 
 class SupplierItem(BaseModel):
     sku: str
@@ -93,3 +98,20 @@ class Quote(BaseModel):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
+
+from dataclasses import dataclass
+from typing import Dict, Any
+
+@dataclass
+class ProcurementState:
+    """Estado extendido para tracking MDP"""
+    episode_id: int
+    timestep: int
+    cumulative_reward: float
+    goal_achieved: bool
+    metadata: Dict[str, Any]
+
+# Alias para compatibilidad con orchestrator_v2
+Product = SupplierItem
+UserRequest = UserProfile
+Quotation = Quote

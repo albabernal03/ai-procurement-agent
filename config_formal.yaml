@@ -1,0 +1,188 @@
+# config_formal.yaml
+# Configuración formal del AI Procurement Agent según documento académico
+
+# ===== MDP ENVIRONMENT (E = ⟨S, A, O, T, R, γ⟩) =====
+environment:
+  discount_factor: 0.95  # γ - discount factor for temporal credit assignment
+  stochastic_transitions: true  # Permitir cambios externos aleatorios
+  observation_noise: 0.05  # ε - nivel de ruido en observaciones
+
+# ===== REWARD FUNCTION (R = r1 + r2 + r3 + r4 - r5) =====
+reward_config:
+  # Goal state thresholds (G = {RC ≥ θC, RE ≥ θE, RQ ≥ θQ})
+  theta_cost: 0.7        # θC - threshold for cost fitness
+  theta_evidence: 0.6    # θE - threshold for evidence quality
+  theta_quotation: 0.8   # θQ - threshold for quotation completeness
+  
+  # Reward component weights
+  w1_cost: 1.0           # Peso de r1 (cost fitness)
+  w2_evidence: 1.0       # Peso de r2 (evidence quality)
+  w3_availability: 1.0   # Peso de r3 (availability)
+  w4_preferences: 0.5    # Peso de r4 (user preferences)
+  w5_penalty: 2.0        # Peso de r5 (penalties)
+
+# ===== SCORING (score = α·cost + β·evidence + γ·availability) =====
+scoring:
+  # Initial weights (will be adapted by feedback system)
+  alpha: 0.35  # Cost weight
+  beta: 0.35   # Evidence weight
+  gamma: 0.30  # Availability weight
+  
+  # Adaptive learning
+  learning_rate: 0.1
+  confidence_threshold: 0.5  # Mínima confianza para usar pesos aprendidos
+  
+  # Vendor bonus
+  preferred_vendor_bonus: 0.10  # 10% bonus para vendors preferidos
+
+# ===== INFERENCE ENGINE =====
+inference:
+  mode: "hybrid"  # "forward", "backward", o "hybrid"
+  max_forward_iterations: 10
+  max_backward_depth: 5
+  
+  # Production rules priorities (R1-R5)
+  rule_priorities:
+    R1_validate_specs: 10  # Más alta prioridad
+    R2_budget_compliance: 9
+    R4_availability: 8
+    R3_evidence_quality: 7
+    R5_learning: 5
+
+# ===== PIPELINE ACTIONS (A1-A5) =====
+pipeline:
+  top_k_recommendations: 3
+  max_products_per_query: 10
+  max_total_products: 50
+  
+  # A1: Perceive and Retrieve
+  query_expansion_enabled: true
+  max_expanded_queries: 5
+  
+  # A2: Normalize
+  deduplication_threshold: 0.85  # Similaridad para considerar duplicado
+  unit_conversion_enabled: true
+  
+  # A3: Evaluate and Score
+  evidence_cache_ttl: 86400  # 24h en segundos
+  min_evidence_score: 0.0  # No filtrar por evidencia mínima
+  
+  # A4: Generate and Explain
+  llm_explanations_enabled: true
+  max_explanation_length: 200
+  include_alternatives: true
+  
+  # A5: Learn and Refine
+  feedback_enabled: true
+  min_decisions_for_learning: 3
+
+# ===== PERCEPTS (P1-P5) =====
+percepts:
+  # P1: Supplier Data Feed
+  supplier_apis:
+    - serp_api
+    - mock_database
+  supplier_update_interval: 86400  # 24h
+  
+  # P2: Scientific Evidence Feed
+  literature_api: "pubmed"
+  literature_cache_enabled: true
+  
+  # P3: User Profile and Constraints
+  default_budget: 10000
+  default_urgency_days: 30
+  default_preferred_vendors: []
+  
+  # P4: Market Dynamics Feed
+  exchange_rates_api: "fixer"  # O mock
+  market_update_interval: 86400  # 24h
+  
+  # P5: Feedback Signals
+  feedback_file: "data/feedback.json"
+  feedback_backup_enabled: true
+
+# ===== LLM AGENT (Groq) =====
+llm:
+  provider: "groq"
+  model: "llama-3.3-70b-versatile"
+  temperature: 0.7
+  max_tokens: 500
+  
+  # Query expansion
+  expansion_prompt: |
+    You are a laboratory procurement expert. Given a reagent query, 
+    generate 3-5 alternative search queries that include:
+    - Different terminology (e.g., "antibody" vs "immunoglobulin")
+    - Common abbreviations
+    - Related products or alternatives
+    
+    Query: {query}
+    
+    Return only the alternative queries, one per line.
+  
+  # Explanation generation
+  explanation_prompt: |
+    Explain why this product is recommended for laboratory procurement:
+    
+    Product: {product_name}
+    Vendor: {vendor}
+    Price: {price} {currency}
+    Evidence Score: {evidence_score:.2f}
+    Availability: {eta_days} days
+    
+    Provide a concise 2-3 sentence justification focusing on:
+    1. Cost-effectiveness
+    2. Scientific validation
+    3. Delivery reliability
+
+# ===== CONNECTORS =====
+connectors:
+  # SerpAPI (Google Shopping)
+  serpapi:
+    enabled: true
+    api_key: ${SERPAPI_KEY}
+    rate_limit: 100  # calls per hour
+    
+  # PubMed
+  pubmed:
+    enabled: true
+    email: ${PUBMED_EMAIL}
+    rate_limit: 3  # calls per second
+    
+  # Mock database (fallback)
+  mock:
+    enabled: true
+    database_path: "data/mock_products.json"
+
+# ===== OUTPUTS =====
+output:
+  quotation_format: "html"  # "html", "pdf", o "json"
+  quotation_dir: "outputs"
+  include_reasoning_trace: true
+  include_mdp_trajectory: false  # Solo para análisis avanzado
+  
+  # Logging
+  log_level: "INFO"
+  log_file: "logs/procurement_agent.log"
+  log_episodes: true
+
+# ===== EVALUATION METRICS =====
+metrics:
+  track_performance: true
+  metrics_file: "data/metrics.json"
+  
+  # KPIs a trackear
+  kpis:
+    - mean_time_to_quotation
+    - cost_vs_budget_ratio
+    - avg_evidence_score
+    - goal_achievement_rate
+    - user_satisfaction_avg
+    - policy_regret
+
+# ===== TESTING =====
+testing:
+  test_mode: false
+  mock_external_apis: false
+  synthetic_feedback: false
+  seed: 42

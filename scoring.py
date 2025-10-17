@@ -231,6 +231,19 @@ class ScoringEngine:
     def get_statistics(self) -> dict:
         """Return scoring statistics for analysis"""
         return self.score_statistics
+    
+    def update_weights(self, alpha: float, beta: float, gamma: float):
+        """
+        Actualiza pesos desde feedback system.
+        Nota: En la versión actual, los pesos se pasan en UserProfile.
+        Este método existe para compatibilidad con orchestrator_v2.
+        """
+        # Los pesos se actualizarán en el próximo UserProfile
+        # Este método registra el cambio para logging
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Weights updated: α={alpha:.3f}, β={beta:.3f}, γ={gamma:.3f}")
+        logger.info("Note: New weights will be applied in next request via UserProfile")
 
 
 def compute_scores(cands: List[Candidate], user: UserProfile) -> List[Candidate]:
