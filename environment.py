@@ -102,6 +102,11 @@ class RewardFunction:
         r4 = self._reward_preferences(state, result)
         r5 = self._penalty(state, result)
         
+        # ✅ Si el costo excede el presupuesto, aplicar penalización fuerte
+        if r1 < 0:
+            # Penalización drástica: anular otros rewards
+            return r1 * self.w5_penalty  # Será muy negativo
+        
         total_reward = (
             self.w1 * r1 + 
             self.w2 * r2 + 
@@ -113,14 +118,15 @@ class RewardFunction:
         return total_reward
     
     def _reward_cost(self, state: State, result: Dict) -> float:
-        """r1: Lower cost vs budget → reward ∈ [0,1]"""
+        """r1: Lower cost vs budget → reward ∈ [-1,1]"""
         budget = state.constraints.get('budget', float('inf'))
         total_cost = result.get('total_cost', float('inf'))
         
         if total_cost > budget:
-            return 0.0
+            # ✅ Penalización negativa proporcional al exceso
+            over_ratio = (total_cost - budget) / budget
+            return -1.0 * over_ratio  # Será negativo
         
-        # Cuanto más bajo el % del budget usado, mayor reward
         return 1.0 - (total_cost / budget)
     
     def _reward_evidence(self, state: State, result: Dict) -> float:

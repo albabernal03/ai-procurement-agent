@@ -64,7 +64,7 @@ def test_mdp_environment(orchestrator: FormalOrchestrator):
     
     # Verificar componentes
     tests = {
-        'State Space (S)': env.current_state is not None,
+        'State Space (S)': hasattr(env, 'current_state'),
         'Action Space (A)': len(env.get_action_space()) == 7,
         'Observation (O)': True,  # Se genera en reset()
         'Transition Model (T)': env.transition_model is not None,

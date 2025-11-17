@@ -27,8 +27,8 @@ class PubMedConnector:
         self.api_key = APIConfig.PUBMED_API_KEY
         self.session = requests.Session()
         
-        # Rate limiting: 3 requests/second without key, 10/second with key
-        self.rate_limit_delay = 0.34 if not self.api_key else 0.1
+        # 🆕 Rate limiting más conservador
+        self.rate_limit_delay = 0.5 if not self.api_key else 0.15  # Aumentado
         self.last_request_time = 0
     
     def _rate_limit(self):
@@ -74,69 +74,109 @@ class PubMedConnector:
             sort='relevance'
         )
         
-        try:
-            response = self.session.get(
-                url,
-                params=params,
-                timeout=APIConfig.REQUEST_TIMEOUT_SECONDS
-            )
-            response.raise_for_status()
-            
-            data = response.json()
-            pmids = data.get('esearchresult', {}).get('idlist', [])
-            
-            return pmids
-            
-        except Exception as e:
-            print(f"PubMed search error: {e}")
-            return []
+        # 🆕 RETRY LOGIC para manejar 429
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = self.session.get(
+                    url,
+                    params=params,
+                    timeout=APIConfig.REQUEST_TIMEOUT_SECONDS
+                )
+                response.raise_for_status()
+                
+                data = response.json()
+                pmids = data.get('esearchresult', {}).get('idlist', [])
+                
+                return pmids
+                
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 429:
+                    wait_time = (attempt + 1) * 2  # 2s, 4s, 6s
+                    print(f"⚠️  Rate limit hit (attempt {attempt + 1}/{max_retries}), waiting {wait_time}s...")
+                    time.sleep(wait_time)
+                    if attempt == max_retries - 1:
+                        print(f"❌ Max retries reached for search")
+                        return []
+                else:
+                    print(f"PubMed search error: {e}")
+                    return []
+            except Exception as e:
+                print(f"PubMed search error: {e}")
+                return []
+        
+        return []
     
     @cached(key_prefix="pubmed_fetch", ttl_hours=168)  # 1 week cache
     def fetch_articles(self, pmids: List[str]) -> List[Dict]:
         """
         Fetch article details for given PMIDs
-        
+        Uses batching to avoid rate limits
+
         Args:
             pmids: List of PubMed IDs
-            
+
         Returns:
             List of article dictionaries with metadata
         """
         if not pmids:
             return []
+
+        # 🆕 BATCHING: Divide en lotes de 5 para evitar rate limits
+        batch_size = 5
+        all_articles = []
         
-        self._rate_limit()
-        
-        url = f"{self.BASE_URL}/efetch.fcgi"
-        params = self._build_params(
-            db='pubmed',
-            id=','.join(pmids),
-            retmode='xml'
-        )
-        
-        try:
-            response = self.session.get(
-                url,
-                params=params,
-                timeout=APIConfig.REQUEST_TIMEOUT_SECONDS
+        for i in range(0, len(pmids), batch_size):
+            batch = pmids[i:i + batch_size]
+            
+            self._rate_limit()
+
+            url = f"{self.BASE_URL}/efetch.fcgi"
+            params = self._build_params(
+                db='pubmed',
+                id=','.join(batch),
+                retmode='xml'
             )
-            response.raise_for_status()
-            
-            # Parse XML response
-            root = ET.fromstring(response.content)
-            articles = []
-            
-            for article_elem in root.findall('.//PubmedArticle'):
-                article = self._parse_article(article_elem)
-                if article:
-                    articles.append(article)
-            
-            return articles
-            
-        except Exception as e:
-            print(f"PubMed fetch error: {e}")
-            return []
-    
+
+            try:
+                response = self.session.get(
+                    url,
+                    params=params,
+                    timeout=APIConfig.REQUEST_TIMEOUT_SECONDS
+                )
+                response.raise_for_status()
+
+                # Parse XML response
+                root = ET.fromstring(response.content)
+
+                for article_elem in root.findall('.//PubmedArticle'):
+                    article = self._parse_article(article_elem)
+                    if article:
+                        all_articles.append(article)
+
+            except requests.exceptions.HTTPError as e:
+                if e.response.status_code == 429:
+                    wait_time = 2
+                    print(f"⚠️  Rate limit hit on fetch, waiting {wait_time}s...")
+                    time.sleep(wait_time)
+                    # Reintenta este batch
+                    try:
+                        response = self.session.get(url, params=params, timeout=APIConfig.REQUEST_TIMEOUT_SECONDS)
+                        response.raise_for_status()
+                        root = ET.fromstring(response.content)
+                        for article_elem in root.findall('.//PubmedArticle'):
+                            article = self._parse_article(article_elem)
+                            if article:
+                                all_articles.append(article)
+                    except Exception as retry_error:
+                        print(f"PubMed fetch retry error: {retry_error}")
+                else:
+                    print(f"PubMed fetch error: {e}")
+            except Exception as e:
+                print(f"PubMed fetch error: {e}")
+
+        return all_articles
+        
     def _parse_article(self, article_elem: ET.Element) -> Optional[Dict]:
         """Parse article XML element into dictionary"""
         try:
@@ -302,7 +342,7 @@ def get_literature_scorer() -> LiteratureScorer:
 
 def evidence_score_from_text(text: str) -> float:
     """
-    Legacy function - now uses real PubMed API
+    Legacy function - now uses real PubMed API with fallback
     
     Args:
         text: Product name and spec combined
@@ -310,18 +350,64 @@ def evidence_score_from_text(text: str) -> float:
     Returns:
         Evidence score [0, 1]
     """
+    # 🆕 Fallback mode si PubMed no está disponible
     if not APIConfig.USE_LITERATURE_API or not APIConfig.PUBMED_ENABLED:
-        # Fallback to simple mock scoring
-        return min(len(text) / 200.0, 1.0)
+        return _mock_evidence_score(text)
     
-    scorer = get_literature_scorer()
+    try:
+        scorer = get_literature_scorer()
+        
+        # Split text into name and spec (rough heuristic)
+        parts = text.split(',', 1)
+        name = parts[0] if parts else text
+        spec = parts[1] if len(parts) > 1 else ""
+        
+        score = scorer.score_product(name, spec)
+        
+        # Si el score es 0, usar fallback
+        if score == 0.0:
+            print("⚠️  PubMed returned 0 score, using fallback")
+            return _mock_evidence_score(text)
+        
+        return score
+        
+    except Exception as e:
+        print(f"⚠️  PubMed unavailable ({e}), using fallback scoring")
+        return _mock_evidence_score(text)
+
+
+def _mock_evidence_score(text: str) -> float:
+    """
+    Fallback scoring cuando PubMed no está disponible
+    Basado en heurísticas simples
+    """
+    score = 0.0
+    text_lower = text.lower()
     
-    # Split text into name and spec (rough heuristic)
-    parts = text.split(',', 1)
-    name = parts[0] if parts else text
-    spec = parts[1] if len(parts) > 1 else ""
+    # Keywords científicos conocidos (+0.15 cada uno)
+    scientific_keywords = [
+        'polymerase', 'antibody', 'enzyme', 'buffer', 'reagent',
+        'kit', 'assay', 'dna', 'rna', 'protein', 'pcr', 'elisa',
+        'western', 'cloning', 'sequencing', 'purification', 'taq',
+        'ligase', 'kinase', 'phosphatase', 'protease', 'molecular'
+    ]
     
-    return scorer.score_product(name, spec)
+    for keyword in scientific_keywords:
+        if keyword in text_lower:
+            score += 0.15
+            if score >= 0.8:
+                break
+    
+    # Longitud del texto (productos con más detalles = mejor)
+    if len(text) > 100:
+        score += 0.1
+    if len(text) > 200:
+        score += 0.05
+    
+    # Normalizar a [0, 1]
+    score = min(score, 1.0)
+    
+    return round(score, 2)
 
 
 # CLI test
